@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>src\pch</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>src\source\hsv</Filter>
+    </ClCompile>
+    <ClCompile Include="network_error.cpp">
+      <Filter>src\source\hsv</Filter>
+    </ClCompile>
+    <ClCompile Include="IPAddress.cpp">
+      <Filter>src\source\hsv</Filter>
+    </ClCompile>
+    <ClCompile Include="IPEndPoint.cpp">
+      <Filter>src\source\hsv</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>src\source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>src\pch</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\IPAddress.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\IPEndPoint.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\Network.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\network_error.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\Socket.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb8f0968-cece-4caa-9b4e-2395252f29c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\header">
+      <UniqueIdentifier>{7deb45c3-2840-4037-8f85-f0507e120c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\source">
+      <UniqueIdentifier>{ed585b14-c2d1-4e21-a3f6-a3e802e7f12a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\source\hsv">
+      <UniqueIdentifier>{dc2e57ce-9ae3-4514-8e8e-fe0dd8d4a95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\pch">
+      <UniqueIdentifier>{eae780f3-b35d-4b05-83d6-e3652f975d38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\header\hsv">
+      <UniqueIdentifier>{0d420d07-03fe-4aa3-b0bd-80b2645ee166}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
