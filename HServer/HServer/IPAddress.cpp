@@ -1,8 +1,7 @@
-#include "stdafx.h"
 #include "hsv/IPAddress.hpp"
 
 namespace hsv {
-	IPAddress::IPAddress(std::vector<uint16_t> bytes)
+	IPAddress::IPAddress(std::array<uint16_t, 4> bytes)
 		: m_adr_str("") 
 	{
 		for (int i = 0; i < bytes.size(); ++i) {

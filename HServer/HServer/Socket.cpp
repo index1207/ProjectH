@@ -32,6 +32,15 @@ void hsv::Socket::operator=(const Socket& sock)
 	this->m_af = sock.m_af;
 }
 
+void hsv::Socket::setBlocking(bool blocking)
+{
+	u_long n = blocking ? 0 : 1;
+	if (ioctlsocket(m_sock, FIONBIO, &n) == SOCKET_ERROR)
+	{
+		throw network_error();
+	}
+}
+
 hsv::Socket::Socket(SOCKET acpt)
 	: m_af(AddressFamily::InterNetwork)
 {

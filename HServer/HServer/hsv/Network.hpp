@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../stdafx.h"
 #include "IPEndPoint.hpp"
 #include "Socket.hpp"
 #include "network_error.hpp"

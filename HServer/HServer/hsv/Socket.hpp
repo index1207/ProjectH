@@ -1,5 +1,6 @@
 #pragma once
-#include "../stdafx.h"
+#include "ws2.hpp"
+
 #include "network_error.hpp"
 #include "IPEndPoint.hpp"
 
@@ -47,6 +48,8 @@ namespace hsv {
 
 		void operator=(const Socket& sock);
 	public:
+		void setBlocking(bool blocking);
+		
 		void Close();
 
 		void Listen(uint16_t size);

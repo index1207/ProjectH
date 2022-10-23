@@ -1,17 +1,16 @@
-#include "stdafx.h"
 #include "hsv/IPEndPoint.hpp"
 
 namespace hsv {
 	IPEndPoint::IPEndPoint(IPAddress&& address, unsigned short port)
 		: m_port(port), m_adr(std::move(address))
 	{
-		SOCKADDR_IN* addrin = &m_adr;
+		auto* addrin = dynamic_cast<SOCKADDR_IN*>(&m_adr);
 		addrin->sin_port = htons(port);
 	}
 	IPEndPoint::IPEndPoint(const IPAddress& address, unsigned short port)
 		: m_port(port), m_adr(address)
 	{
-		SOCKADDR_IN* addrin = &m_adr;
+		auto* addrin = dynamic_cast<SOCKADDR_IN*>(&m_adr);
 		addrin->sin_port = htons(port);
 	}
 

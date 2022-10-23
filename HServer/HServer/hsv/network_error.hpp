@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include <exception>
 
 namespace hsv
 {
@@ -13,5 +13,6 @@ namespace hsv
 		void GetErrorMessage();
 
 		char buf[512];
+		int code;
 	};
 }

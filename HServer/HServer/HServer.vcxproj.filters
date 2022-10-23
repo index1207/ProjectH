@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>src\pch</Filter>
-    </ClCompile>
     <ClCompile Include="Socket.cpp">
       <Filter>src\source\hsv</Filter>
     </ClCompile>
@@ -19,11 +16,11 @@
     <ClCompile Include="main.cpp">
       <Filter>src\source</Filter>
     </ClCompile>
+    <ClCompile Include="Selector.cpp">
+      <Filter>src\source\hsv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>src\pch</Filter>
-    </ClInclude>
     <ClInclude Include="hsv\IPAddress.hpp">
       <Filter>src\header\hsv</Filter>
     </ClInclude>
@@ -37,6 +34,12 @@
       <Filter>src\header\hsv</Filter>
     </ClInclude>
     <ClInclude Include="hsv\Socket.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\Selector.hpp">
+      <Filter>src\header\hsv</Filter>
+    </ClInclude>
+    <ClInclude Include="hsv\ws2.hpp">
       <Filter>src\header\hsv</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,8 @@
 #pragma once
+#include "ws2.hpp"
 
-#include "../stdafx.h"
+#include <string>
+#include <array>
 
 namespace hsv
 {
@@ -9,7 +11,7 @@ namespace hsv
 	public:
 		IPAddress() = default;
 
-		IPAddress(std::vector<uint16_t> bytes);
+		IPAddress(std::array<uint16_t, 4> bytes);
 
 		const std::string ToString() const;
 
