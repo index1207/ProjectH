@@ -100,3 +100,13 @@ const SOCKET hsv::Socket::GetHandle() const
 	return m_sock;
 }
 
+void hsv::Socket::SetHandle(SOCKET s)
+{
+	this->m_sock = s;
+}
+
+bool hsv::Socket::operator==(Socket other)
+{
+	return this->m_sock == other.m_sock;
+}
+

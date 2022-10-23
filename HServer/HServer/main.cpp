@@ -4,38 +4,62 @@
 
 using namespace hsv;
 
-int main() {
+int main() 
+{
 	Socket sock;
-	try {
+	try 
+	{
 		hsv::initialize();
 		sock = Socket(AddressFamily::InterNetwork, SocketType::Stream, ProtocolType::Tcp);
+
+		int optval = 1;
+		setsockopt(sock.GetHandle(), SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&optval), sizeof(optval));
 
 		IPEndPoint ep(IPAddress::Any(), 1207);
 		sock.Bind(ep);
 
 		sock.Listen(16);
-
-		Socket client = sock.Accept();
-
+		std::cout << "[System] Server is Ready!\n";
 		sock.setBlocking(false);
 
-		char buf[1024] = "";
-		while (true) {
-			memset(buf, 0, 1024);
-			try {
-				auto n = client.Receive(buf, 1024);
-				std::cout << "받은 바이트 : " << n << '\n';
+		Selector selector;
+		selector.Add(sock);
 
-				n = client.Send(buf, strlen(buf));
-				std::cout << "보낸 바이트 : " << n << '\n';
-			}
-			catch (std::exception& exc) {
-				std::cout << "연결이 끊어짐";
-				break;
+		char buf[1024] = "";
+		while (true) 
+		{
+			int nSocket = selector.Wait(std::chrono::milliseconds(100));
+			for (int i = 0; i < nSocket; ++i) 
+			{
+				memset(buf, 0, 1024);
+				Socket s = selector.GetReadySocket(i);
+				if (sock == s)
+				{
+					Socket client = sock.Accept();
+					selector.Add(client);
+
+					std::cout << "[System] Connected " << client.GetHandle() << '\n';
+				}
+				else
+				{
+					try
+					{
+						int len = s.Receive(buf, 1024);
+						std::cout << std::format("[{}] {}\n", s.GetHandle(), buf) << '\n';
+						s.Send(buf, len);
+					}
+					catch (std::exception& ex)
+					{
+						selector.Remove(s);
+						std::cout << "[System] Disconnected " << s.GetHandle() << '\n';
+						s.Close();
+					}
+				}
 			}
 		}
 	}
-	catch (std::exception& e) {
+	catch (std::exception& e) 
+	{
 		std::cout << e.what() << '\n';
 	}
 	sock.Close();

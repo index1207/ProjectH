@@ -63,6 +63,10 @@ namespace hsv {
 		size_t Send(const char* buffer, int size, SocketFlags flag = SocketFlags::None);
 	public:
 		const SOCKET GetHandle() const;
+		
+		void SetHandle(SOCKET s);
+	public:
+		bool operator==(Socket other);
 	private:
 		Socket(SOCKET acpt);
 	private:

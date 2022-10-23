@@ -3,6 +3,7 @@
 #include "IPEndPoint.hpp"
 #include "Socket.hpp"
 #include "network_error.hpp"
+#include "Selector.hpp"
 
 namespace hsv {
 	inline void initialize() {

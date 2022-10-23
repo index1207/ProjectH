@@ -56,9 +56,6 @@
     <Filter Include="src\source\hsv">
       <UniqueIdentifier>{dc2e57ce-9ae3-4514-8e8e-fe0dd8d4a95d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\pch">
-      <UniqueIdentifier>{eae780f3-b35d-4b05-83d6-e3652f975d38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\header\hsv">
       <UniqueIdentifier>{0d420d07-03fe-4aa3-b0bd-80b2645ee166}</UniqueIdentifier>
     </Filter>
