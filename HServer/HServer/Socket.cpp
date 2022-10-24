@@ -1,6 +1,6 @@
-#include "hsv/Socket.hpp"
+#include "net/Socket.hpp"
 
-hsv::Socket::Socket(AddressFamily af, SocketType type, ProtocolType proto)
+net::Socket::Socket(AddressFamily af, SocketType type, ProtocolType proto)
 	: m_af(af)
 {
 	m_sock = socket((int)af, (int)type, (int)proto);
@@ -9,30 +9,30 @@ hsv::Socket::Socket(AddressFamily af, SocketType type, ProtocolType proto)
 	}
 }
 
-hsv::Socket::Socket(SocketType type, ProtocolType proto)
+net::Socket::Socket(SocketType type, ProtocolType proto)
 {
 	Socket(AddressFamily::InterNetwork, type, proto);
 }
 
-hsv::Socket::Socket(const Socket& sock)
+net::Socket::Socket(const Socket& sock)
 {
 	this->m_sock = sock.m_sock;
 	this->m_af = sock.m_af;
 }
 
-hsv::Socket::Socket(Socket&& sock) noexcept
+net::Socket::Socket(Socket&& sock) noexcept
 {
 	this->m_sock = std::move(sock.m_sock);
 	this->m_af = std::move(sock.m_af);
 }
 
-void hsv::Socket::operator=(const Socket& sock)
+void net::Socket::operator=(const Socket& sock)
 {
 	this->m_sock = sock.m_sock;
 	this->m_af = sock.m_af;
 }
 
-void hsv::Socket::setBlocking(bool blocking)
+void net::Socket::setBlocking(bool blocking)
 {
 	u_long n = blocking ? 0 : 1;
 	if (ioctlsocket(m_sock, FIONBIO, &n) == SOCKET_ERROR)
@@ -41,34 +41,34 @@ void hsv::Socket::setBlocking(bool blocking)
 	}
 }
 
-hsv::Socket::Socket(SOCKET acpt)
+net::Socket::Socket(SOCKET acpt)
 	: m_af(AddressFamily::InterNetwork)
 {
 	this->m_sock = acpt;
 }
 
-void hsv::Socket::Close()
+void net::Socket::Close()
 {
 	closesocket(m_sock);
 }
 
-void hsv::Socket::Listen(uint16_t size)
+void net::Socket::Listen(uint16_t size)
 {
 	if (listen(m_sock, size) == SOCKET_ERROR) {
 		throw network_error();
 	}
 }
 
-void hsv::Socket::Bind(IPEndPoint& endpoint)
+void net::Socket::Bind(IPEndPoint& endpoint)
 {
 	SOCKADDR_IN* addr = &endpoint;
 	addr->sin_family = (ADDRESS_FAMILY)m_af;
 	if (bind(m_sock, (SOCKADDR*)addr, sizeof(SOCKADDR_IN)) == SOCKET_ERROR) {
-		throw hsv::network_error();
+		throw net::network_error();
 	}
 }
 
-const hsv::Socket hsv::Socket::Accept()
+const net::Socket net::Socket::Accept()
 {
 	Socket t = accept(GetHandle(), nullptr, nullptr);
 	if (t.m_sock == INVALID_SOCKET) {
@@ -77,7 +77,7 @@ const hsv::Socket hsv::Socket::Accept()
 	return t;
 }
 
-size_t hsv::Socket::Receive(char* buffer, int size, SocketFlags flag)
+size_t net::Socket::Receive(char* buffer, int size, SocketFlags flag)
 {
 	size_t len = recv(m_sock, buffer, size, (int)flag);
 	if (len == SOCKET_ERROR) {
@@ -86,7 +86,7 @@ size_t hsv::Socket::Receive(char* buffer, int size, SocketFlags flag)
 	return len;
 }
 
-size_t hsv::Socket::Send(const char* buffer, int size, SocketFlags flag)
+size_t net::Socket::Send(const char* buffer, int size, SocketFlags flag)
 {
 	size_t len = send(m_sock, buffer, size, (int)flag);
 	if (len == SOCKET_ERROR) {
@@ -95,17 +95,17 @@ size_t hsv::Socket::Send(const char* buffer, int size, SocketFlags flag)
 	return len;
 }
 
-const SOCKET hsv::Socket::GetHandle() const
+const SOCKET net::Socket::GetHandle() const
 {
 	return m_sock;
 }
 
-void hsv::Socket::SetHandle(SOCKET s)
+void net::Socket::SetHandle(SOCKET s)
 {
 	this->m_sock = s;
 }
 
-bool hsv::Socket::operator==(Socket other)
+bool net::Socket::operator==(Socket other)
 {
 	return this->m_sock == other.m_sock;
 }

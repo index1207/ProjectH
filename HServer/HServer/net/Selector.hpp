@@ -2,7 +2,7 @@
 #include "Socket.hpp"
 #include <chrono>
 
-namespace hsv
+namespace net
 {
 	class Selector
 	{
@@ -21,6 +21,10 @@ namespace hsv
 		int Wait(std::chrono::milliseconds time);
 		// Get ready socket
 		Socket GetReadySocket(int num);
+		// Get ready socket count
+		int Count() const;
+	public:
+		Socket operator[](size_t i);
 	private:
 		int m_sockCount;
 		FD_SET master;

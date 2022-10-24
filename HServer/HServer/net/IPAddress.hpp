@@ -4,9 +4,9 @@
 #include <string>
 #include <array>
 
-namespace hsv
+namespace net
 {
-	class IPAddress : public SOCKADDR_IN
+	class IPAddress : private SOCKADDR_IN
 	{
 	public:
 		IPAddress() = default;
@@ -28,5 +28,6 @@ namespace hsv
 		void bindAddr(std::string& adrstr);
 	private:
 		std::string m_adr_str;
+		friend class IPEndPoint;
 	};
 }

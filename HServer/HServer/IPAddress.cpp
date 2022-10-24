@@ -1,6 +1,6 @@
-#include "hsv/IPAddress.hpp"
+#include "net/IPAddress.hpp"
 
-namespace hsv {
+namespace net {
 	IPAddress::IPAddress(std::array<uint16_t, 4> bytes)
 		: m_adr_str("") 
 	{
@@ -18,35 +18,35 @@ namespace hsv {
 		return m_adr_str;
 	}
 
-	void hsv::IPAddress::Parse(std::string adrstr) 
+	void net::IPAddress::Parse(std::string adrstr) 
 	{
 		bindAddr(adrstr);
 	}
 
 	const IPAddress IPAddress::Any() 
 	{
-		hsv::IPAddress ipadr;
+		net::IPAddress ipadr;
 		ipadr.m_adr_str = "0.0.0.0";
 		ipadr.sin_addr.s_addr = htonl(INADDR_ANY);
 		return ipadr;
 	}
 	const IPAddress IPAddress::Loopback() 
 	{
-		hsv::IPAddress ipadr;
+		net::IPAddress ipadr;
 		ipadr.m_adr_str = "127.0.0.1";
 		ipadr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
 		return ipadr;
 	}
 	const IPAddress IPAddress::None() 
 	{
-		hsv::IPAddress ipadr;
+		net::IPAddress ipadr;
 		ipadr.m_adr_str = "255.255.255.255";
 		ipadr.sin_addr.s_addr = htonl(INADDR_NONE);
 		return ipadr;
 	}
 	const IPAddress IPAddress::Broadcast() 
 	{
-		hsv::IPAddress ipadr;
+		net::IPAddress ipadr;
 		ipadr.m_adr_str = "255.255.255.255";
 		ipadr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 		return ipadr;

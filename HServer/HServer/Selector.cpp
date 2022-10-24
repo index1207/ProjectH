@@ -1,6 +1,6 @@
-#include "hsv/Selector.hpp"
+#include "net/Selector.hpp"
 
-namespace hsv
+namespace net
 {
     Selector::Selector()
         : m_sockCount(0)
@@ -61,6 +61,17 @@ namespace hsv
         Socket sock;
         sock.SetHandle(s);
 
+        return sock;
+    }
+    int Selector::Count() const
+    {
+        return master.fd_count;
+    }
+    Socket Selector::operator[](size_t i)
+    {
+        SOCKET s = master.fd_array[i];
+        Socket sock;
+        sock.SetHandle(s);
         return sock;
     }
 }

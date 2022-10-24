@@ -4,7 +4,7 @@
 #include "network_error.hpp"
 #include "IPEndPoint.hpp"
 
-namespace hsv {
+namespace net {
 	enum class AddressFamily
 	{
 		InterNetwork = AF_INET,

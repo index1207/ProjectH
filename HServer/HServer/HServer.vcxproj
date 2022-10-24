@@ -161,13 +161,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hsv\IPAddress.hpp" />
-    <ClInclude Include="hsv\IPEndPoint.hpp" />
-    <ClInclude Include="hsv\Network.hpp" />
-    <ClInclude Include="hsv\network_error.hpp" />
-    <ClInclude Include="hsv\Selector.hpp" />
-    <ClInclude Include="hsv\Socket.hpp" />
-    <ClInclude Include="hsv\ws2.hpp" />
+    <ClInclude Include="net\IPAddress.hpp" />
+    <ClInclude Include="net\IPEndPoint.hpp" />
+    <ClInclude Include="net\Network.hpp" />
+    <ClInclude Include="net\network_error.hpp" />
+    <ClInclude Include="net\Selector.hpp" />
+    <ClInclude Include="net\Socket.hpp" />
+    <ClInclude Include="net\ws2.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

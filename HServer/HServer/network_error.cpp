@@ -1,8 +1,8 @@
-#include "hsv/ws2.hpp"
-#include "hsv/network_error.hpp"
+#include "net/ws2.hpp"
+#include "net/network_error.hpp"
 
 
-namespace hsv {
+namespace net {
 	network_error::network_error() : buf("") 
 	{
 		GetErrorMessage();

@@ -2,46 +2,23 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Socket.cpp">
-      <Filter>src\source\hsv</Filter>
+      <Filter>src\source\net</Filter>
     </ClCompile>
     <ClCompile Include="network_error.cpp">
-      <Filter>src\source\hsv</Filter>
+      <Filter>src\source\net</Filter>
     </ClCompile>
     <ClCompile Include="IPAddress.cpp">
-      <Filter>src\source\hsv</Filter>
+      <Filter>src\source\net</Filter>
     </ClCompile>
     <ClCompile Include="IPEndPoint.cpp">
-      <Filter>src\source\hsv</Filter>
+      <Filter>src\source\net</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>src\source</Filter>
     </ClCompile>
     <ClCompile Include="Selector.cpp">
-      <Filter>src\source\hsv</Filter>
+      <Filter>src\source\net</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="hsv\IPAddress.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\IPEndPoint.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\Network.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\network_error.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\Socket.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\Selector.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
-    <ClInclude Include="hsv\ws2.hpp">
-      <Filter>src\header\hsv</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -53,11 +30,34 @@
     <Filter Include="src\source">
       <UniqueIdentifier>{ed585b14-c2d1-4e21-a3f6-a3e802e7f12a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\source\hsv">
-      <UniqueIdentifier>{dc2e57ce-9ae3-4514-8e8e-fe0dd8d4a95d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\header\hsv">
+    <Filter Include="src\header\net">
       <UniqueIdentifier>{0d420d07-03fe-4aa3-b0bd-80b2645ee166}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\source\net">
+      <UniqueIdentifier>{dc2e57ce-9ae3-4514-8e8e-fe0dd8d4a95d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="net\IPAddress.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\IPEndPoint.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\Network.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\network_error.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\Selector.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\Socket.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\ws2.hpp">
+      <Filter>src\header\net</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

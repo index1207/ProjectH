@@ -1,6 +1,6 @@
-#include "hsv/IPEndPoint.hpp"
+#include "net/IPEndPoint.hpp"
 
-namespace hsv {
+namespace net {
 	IPEndPoint::IPEndPoint(IPAddress&& address, unsigned short port)
 		: m_port(port), m_adr(std::move(address))
 	{

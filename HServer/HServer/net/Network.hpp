@@ -5,7 +5,7 @@
 #include "network_error.hpp"
 #include "Selector.hpp"
 
-namespace hsv {
+namespace net {
 	inline void initialize() {
 		WSADATA wsaData;
 		if (WSAStartup(MAKEWORD(2, 2), &wsaData)) {

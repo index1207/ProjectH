@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
 
-namespace hsv
+namespace net
 {
 	class network_error : public std::exception
 	{
