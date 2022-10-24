@@ -36,6 +36,9 @@
     <Filter Include="src\source\net">
       <UniqueIdentifier>{dc2e57ce-9ae3-4514-8e8e-fe0dd8d4a95d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{e34b99ef-d549-4be3-b663-b0cbbf1b1a94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="net\IPAddress.hpp">

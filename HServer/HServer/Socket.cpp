@@ -80,7 +80,7 @@ const net::Socket net::Socket::Accept()
 size_t net::Socket::Receive(char* buffer, int size, SocketFlags flag)
 {
 	size_t len = recv(m_sock, buffer, size, (int)flag);
-	if (len == SOCKET_ERROR) {
+	if (len <= 0) {
 		throw network_error();
 	}
 	return len;

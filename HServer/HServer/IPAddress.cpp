@@ -10,7 +10,7 @@ namespace net {
 				m_adr_str += ".";
 			}
 		}
-		bindAddr(m_adr_str);
+		bindAddr(m_adr_str.c_str());
 	}
 
 	const std::string IPAddress::ToString() const
@@ -18,9 +18,13 @@ namespace net {
 		return m_adr_str;
 	}
 
-	void net::IPAddress::Parse(std::string adrstr) 
+	net::IPAddress net::IPAddress::Parse(const char* adrstr)
 	{
-		bindAddr(adrstr);
+		IPAddress ipadr;
+		ipadr.m_adr_str = adrstr;
+		ipadr.bindAddr(adrstr);
+
+		return ipadr;
 	}
 
 	const IPAddress IPAddress::Any() 
@@ -52,8 +56,8 @@ namespace net {
 		return ipadr;
 	}
 
-	void IPAddress::bindAddr(std::string& adrstr) 
+	void IPAddress::bindAddr(const char* adrstr) 
 	{
-		inet_pton(AF_INET, adrstr.c_str(), &this->sin_addr);
+		inet_pton(AF_INET, adrstr, &this->sin_addr);
 	}
 }

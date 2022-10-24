@@ -5,6 +5,7 @@
 #include "IPEndPoint.hpp"
 
 namespace net {
+	using SocketHandle = SOCKET;
 	enum class AddressFamily
 	{
 		InterNetwork = AF_INET,
@@ -62,7 +63,7 @@ namespace net {
 
 		size_t Send(const char* buffer, int size, SocketFlags flag = SocketFlags::None);
 	public:
-		const SOCKET GetHandle() const;
+		const SocketHandle GetHandle() const;
 		
 		void SetHandle(SOCKET s);
 	public:

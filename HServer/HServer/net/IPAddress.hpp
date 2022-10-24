@@ -14,9 +14,9 @@ namespace net
 		IPAddress(std::array<uint16_t, 4> bytes);
 
 		const std::string ToString() const;
-
-		void Parse(std::string adrstr);
 	public:
+		static IPAddress Parse(const char* adrstr);
+
 		const static IPAddress Any();
 
 		const static IPAddress Loopback();
@@ -25,7 +25,7 @@ namespace net
 
 		const static IPAddress Broadcast();
 	private:
-		void bindAddr(std::string& adrstr);
+		void bindAddr(const char* adrstr);
 	private:
 		std::string m_adr_str;
 		friend class IPEndPoint;
