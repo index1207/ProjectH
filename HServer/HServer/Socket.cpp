@@ -32,7 +32,7 @@ void net::Socket::operator=(const Socket& sock)
 	this->m_af = sock.m_af;
 }
 
-void net::Socket::setBlocking(bool blocking)
+void net::Socket::SetBlocking(bool blocking)
 {
 	u_long n = blocking ? 0 : 1;
 	if (ioctlsocket(m_sock, FIONBIO, &n) == SOCKET_ERROR)
@@ -77,18 +77,18 @@ const net::Socket net::Socket::Accept()
 	return t;
 }
 
-size_t net::Socket::Receive(char* buffer, int size, SocketFlags flag)
+int net::Socket::Receive(char* buffer, int size, SocketFlags flag)
 {
-	size_t len = recv(m_sock, buffer, size, (int)flag);
+	int len = recv(m_sock, buffer, size, (int)flag);
 	if (len <= 0) {
 		throw network_error();
 	}
 	return len;
 }
 
-size_t net::Socket::Send(const char* buffer, int size, SocketFlags flag)
+int net::Socket::Send(const char* buffer, int size, SocketFlags flag)
 {
-	size_t len = send(m_sock, buffer, size, (int)flag);
+	int len = send(m_sock, buffer, size, (int)flag);
 	if (len == SOCKET_ERROR) {
 		throw network_error();
 	}

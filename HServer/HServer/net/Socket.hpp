@@ -49,7 +49,7 @@ namespace net {
 
 		void operator=(const Socket& sock);
 	public:
-		void setBlocking(bool blocking);
+		void SetBlocking(bool blocking);
 		
 		void Close();
 
@@ -59,9 +59,9 @@ namespace net {
 
 		const Socket Accept();
 	public:
-		size_t Receive(char* buffer, int size, SocketFlags flag = SocketFlags::None);
+		int Receive(char* buffer, int size, SocketFlags flag = SocketFlags::None);
 
-		size_t Send(const char* buffer, int size, SocketFlags flag = SocketFlags::None);
+		int Send(const char* buffer, int size, SocketFlags flag = SocketFlags::None);
 	public:
 		const SocketHandle GetHandle() const;
 		

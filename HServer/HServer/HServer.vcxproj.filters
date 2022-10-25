@@ -16,7 +16,7 @@
     <ClCompile Include="main.cpp">
       <Filter>src\source</Filter>
     </ClCompile>
-    <ClCompile Include="Selector.cpp">
+    <ClCompile Include="SocketSelector.cpp">
       <Filter>src\source\net</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClInclude Include="net\network_error.hpp">
       <Filter>src\header\net</Filter>
     </ClInclude>
-    <ClInclude Include="net\Selector.hpp">
+    <ClInclude Include="net\SocketSelector.hpp">
       <Filter>src\header\net</Filter>
     </ClInclude>
     <ClInclude Include="net\Socket.hpp">

@@ -3,7 +3,7 @@
 #include "IPEndPoint.hpp"
 #include "Socket.hpp"
 #include "network_error.hpp"
-#include "Selector.hpp"
+#include "SocketSelector.hpp"
 
 namespace net {
 	std::string GetPeerAddressString(const Socket& sock) {
