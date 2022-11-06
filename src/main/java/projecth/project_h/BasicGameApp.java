@@ -6,6 +6,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -13,6 +14,10 @@ import javafx.scene.text.Text;
 import java.util.Map;
 public class BasicGameApp extends GameApplication {
     private Entity player;
+    private static String[] g_args;
+
+
+
     //플레이어 생성
     @Override
     protected void initGame() {
@@ -66,8 +71,10 @@ public class BasicGameApp extends GameApplication {
         settings.setTitle("Basic Game App");
     }
 
+
     //실행
     public static void main(String[] args) {
+        Login login = new Login();
         launch(args);
     }
 }
