@@ -1,9 +1,11 @@
 package projecth.project_h;
 
-
-
+import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,19 +13,25 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 
 import java.io.FileInputStream;
-import java.time.temporal.TemporalQueries;
 
 
 public class Login extends Application  {
 
     private StackPane root = new StackPane();
-    private Scene scene1,scene2,scene3,scene4,scene5;
+    private Scene LoginScene, MainScene, RuleScene, RegisterScene,GameScene;
     private Stage window;
 
+    int XY = 50;
+    int XY2 = 50;
     String UserId,pw,UserId2,pw2;
 
 
@@ -37,7 +45,7 @@ public class Login extends Application  {
         Label Password = new Label("Password");
         PasswordField password = new PasswordField();
         Button login = new Button("로그인");
-        Button signUp = new Button("회원가입");
+        Button SignUp = new Button("회원가입");
 
         //메인메뉴 페이지 버튼
         Button start = new Button("시작하기");
@@ -52,33 +60,43 @@ public class Login extends Application  {
         Button Return = new Button("돌아가기");
 
         //게임 페이지 버튼
+        Button GameExitButton = new Button("나가기");
+        Button GameReturnButton = new Button("돌아가기");
+        GameExitButton.setMaxWidth(250);
+        GameReturnButton.setMaxWidth(250);
+        GameExitButton.setTranslateY(550);
+        GameReturnButton.setTranslateY(550);
 
 
         //회원가입 페이지 버튼
         Label Username2 = new Label("Username");
-        TextField user2 = new TextField("Username");
+        TextField user2 = new TextField();
         Label Password2 = new Label("Password");
         PasswordField password2 = new PasswordField();
         Button register = new Button("등록");
 
         //login 눌렀을때(Login) -> 메인메뉴로
-        login.setOnAction(e->window.setScene(scene2));
+        login.setOnAction(e->window.setScene(MainScene));
 
-        //signUp 회원가입 -> 회원가입 페이지
-        signUp.setOnAction(e->window.setScene(scene5));
+        //SignUp 회원가입 -> 회원가입 페이지
+        SignUp.setOnAction(e->window.setScene(RegisterScene));
 
         //start 시작하기 -> ?
-        start.setOnAction(e->window.setScene(scene1));
+        start.setOnAction(e->window.setScene(GameScene));
 
         //rule 게임방법 -> 게임방법 페이지
-        rule.setOnAction(e->window.setScene(scene3));
-        Return.setOnAction(e->window.setScene(scene2));//돌아가기 -> 메인메뉴
+        rule.setOnAction(e->window.setScene(RuleScene));
+        Return.setOnAction(e->window.setScene(MainScene));//돌아가기 -> 메인메뉴
 
         //exit 나가기 -> 시스템 종료
         exit.setOnAction(e->window.close());
+        GameExitButton.setOnAction(e->window.close());
 
         //register 회원가입 -> 로그인
-        register.setOnAction(e->window.setScene(scene1));
+        register.setOnAction(e->window.setScene(LoginScene));
+
+        //GameReturnButton 돌아가기 -> 메인
+        GameReturnButton.setOnAction(e->window.setScene(MainScene));
 
         // layout1 = 로그인 페이지
         VBox layout1 = new VBox(10);
@@ -90,13 +108,13 @@ public class Login extends Application  {
                 Password,
                 password,
                 login,
-                signUp
+                SignUp
         );
         user.setPromptText("Username");
         password.setPromptText("Password");
         UserId = user2.getText();
         pw = password2.getText();
-        scene1 = new Scene(layout1, 400, 200);
+        LoginScene = new Scene(layout1, 400, 200);
 
         // layout2 = 메인메뉴 페이지
         VBox layout2 = new VBox(10);
@@ -106,7 +124,7 @@ public class Login extends Application  {
                 rule,
                 exit
         );
-        scene2 = new Scene(layout2, 500,300);
+        MainScene = new Scene(layout2, 500,300);
 
         //Background 이미지
         FileInputStream inp = new FileInputStream("src/main/resources/projecth/project_h/H.jpg");
@@ -125,15 +143,54 @@ public class Login extends Application  {
         layout2.setBackground(bg);
 
         //layout3 = 시작 화면
-        VBox layout3 = new VBox(10);
+        Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/slime.png"));
+        ImageView imageView = new ImageView(image);
+        final Rectangle rect = new Rectangle();
+        VBox layout3 = new VBox(imageView);
         layout3.setSpacing(8);
         layout3.setPadding(new Insets(50,10,10,10));
-        layout3.getChildren().addAll(
-                rule2,
-                Return
-        );
-        scene4 = new Scene(layout3, 400, 200);
 
+        //이미지 출력
+
+        imageView.setX(XY);
+        imageView.setY(XY2);
+
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
+
+        imageView.setPreserveRatio(true);
+
+
+        FileInputStream inp2 = new FileInputStream("src/main/resources/projecth/project_h/Layout.png");
+
+        //이미지 제어
+        Image im2 = new Image(inp2);
+        BackgroundImage bi2 = new BackgroundImage(
+                im2,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT
+        );
+
+        //Background 사진 출력
+        Background bg2 = new Background(bi2);
+
+        layout3.setBackground(bg2);
+        layout3.getChildren().addAll(
+                GameExitButton,
+                GameReturnButton
+        );
+
+        GameScene = new Scene(layout3, 1280, 720);
+        GameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.RIGHT){
+                    XY += 10;
+                }
+            }
+        });
 
         //layout4 = 게임방법 페이지
         VBox layout4 = new VBox(10);
@@ -143,7 +200,7 @@ public class Login extends Application  {
                 rule2,
                 Return
         );
-        scene3 = new Scene(layout4, 400, 200);
+        RuleScene = new Scene(layout4, 400, 200);
 
         //layout5 = 회원가입 페이지
         VBox layout5 = new VBox(10);
@@ -160,21 +217,17 @@ public class Login extends Application  {
         password2.setPromptText("Password");
         UserId2 = user2.getText();
         pw2 = password2.getText();
-        scene5 = new Scene(layout5, 400, 200);
+        RegisterScene = new Scene(layout5, 400, 200);
 
-        //layout6 = 시작페이지
-        VBox layout6 = new VBox(10);
-        layout6.setSpacing(8);
-        layout6.setPadding(new Insets(50,10,10,10));
-        layout6.getChildren().addAll(
 
-        );
 
         //시작
-        window.setScene(scene1);
+        window.setScene(LoginScene);
         window.setTitle("project H");
         window.show();
+
     }
+
 
     public static void main(String[] args) {
         launch(args);
