@@ -1,11 +1,9 @@
 package projecth.project_h;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.TranslateTransition;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,9 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 
 import java.io.FileInputStream;
@@ -29,9 +27,9 @@ public class Login extends Application  {
     private StackPane root = new StackPane();
     private Scene LoginScene, MainScene, RuleScene, RegisterScene,GameScene;
     private Stage window;
-
-    int XY = 50;
-    int XY2 = 50;
+    int count = 0;
+    int XY = 0;
+    int XY2 = 0;
     String UserId,pw,UserId2,pw2;
 
 
@@ -62,10 +60,14 @@ public class Login extends Application  {
         //게임 페이지 버튼
         Button GameExitButton = new Button("나가기");
         Button GameReturnButton = new Button("돌아가기");
+        TextField chat = new TextField();
         GameExitButton.setMaxWidth(250);
         GameReturnButton.setMaxWidth(250);
         GameExitButton.setTranslateY(550);
         GameReturnButton.setTranslateY(550);
+        chat.setMaxWidth(400);
+        chat.setTranslateY(500);
+        chat.setTranslateX(833);
 
 
         //회원가입 페이지 버튼
@@ -145,16 +147,13 @@ public class Login extends Application  {
         //layout3 = 시작 화면
         Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/slime.png"));
         ImageView imageView = new ImageView(image);
-        final Rectangle rect = new Rectangle();
         VBox layout3 = new VBox(imageView);
         layout3.setSpacing(8);
         layout3.setPadding(new Insets(50,10,10,10));
 
         //이미지 출력
-
         imageView.setX(XY);
         imageView.setY(XY2);
-
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
 
@@ -175,22 +174,70 @@ public class Login extends Application  {
 
         //Background 사진 출력
         Background bg2 = new Background(bi2);
-
         layout3.setBackground(bg2);
+
+        chat.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if(keyEvent.getCode().equals(KeyCode.ENTER)){
+                    if(count % 18 == 0) {
+                        layout3.getChildren().clear();
+                        layout3.getChildren().addAll(
+                                imageView,
+                                GameReturnButton,
+                                GameExitButton,
+                                chat
+                        );
+                    }
+                    imageView.setImage(image);
+                    Label ch = new Label(chat.getText());
+                    ch.setFont(new Font("Dotum",24));
+                    ch.setTranslateY(-180);
+                    ch.setTranslateX(810);
+                    ch.setStyle("-fx-border-color: Yellow;-fx-background-color: Yellow;");
+                    ch.setTextFill(Color.web("#050505"));
+                    layout3.getChildren().add(ch);
+
+                    chat.setText("");
+                    count++;
+                }
+                switch (keyEvent.getCode()) {
+                    case UP:
+                        imageView.setImage(null);
+                        imageView.setTranslateY(XY2 -= 10);
+                        imageView.setImage(image);
+                        layout3.getChildren().addAll(imageView);
+                        break;
+                    case DOWN:
+                        imageView.setImage(null);
+                        imageView.setTranslateY(XY2 += 10);
+                        imageView.setImage(image);
+                        layout3.getChildren().addAll(imageView);
+                        break;
+                    case RIGHT:
+                        imageView.setImage(null);
+                        imageView.setTranslateX(XY += 10);
+                        imageView.setImage(image);
+                        layout3.getChildren().addAll(imageView);
+                        break;
+                    case LEFT:
+                        imageView.setImage(null);
+                        imageView.setTranslateX(XY -= 10);
+                        imageView.setImage(image);
+                        layout3.getChildren().addAll(imageView);
+                        break;
+                }
+
+            }
+        });
+
         layout3.getChildren().addAll(
+                GameReturnButton,
                 GameExitButton,
-                GameReturnButton
+                chat
         );
 
         GameScene = new Scene(layout3, 1280, 720);
-        GameScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.getCode() == KeyCode.RIGHT){
-                    XY += 10;
-                }
-            }
-        });
 
         //layout4 = 게임방법 페이지
         VBox layout4 = new VBox(10);
@@ -223,6 +270,7 @@ public class Login extends Application  {
 
         //시작
         window.setScene(LoginScene);
+        window.setResizable(false);
         window.setTitle("project H");
         window.show();
 
