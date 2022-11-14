@@ -145,7 +145,7 @@ public class Login extends Application  {
         layout2.setBackground(bg);
 
         //layout3 = 시작 화면
-        Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/slime.png"));
+        Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/slime2.png"));
         ImageView imageView = new ImageView(image);
         VBox layout3 = new VBox(imageView);
         layout3.setSpacing(8);
