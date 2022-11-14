@@ -5,10 +5,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -20,6 +17,9 @@ import javafx.stage.Stage;
 
 
 import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+
+
 
 
 public class Login extends Application  {
@@ -30,13 +30,18 @@ public class Login extends Application  {
     int count = 0;
     int XY = 0;
     int XY2 = 0;
-    String UserId,pw,UserId2,pw2;
+    String UserId,pw,UserId2,pw2,chatting;
+
+    boolean tf;
+    final static int PACKET_SIZE = 1024;
+
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        window = primaryStage;
 
+        window = primaryStage;
+        Client c = new Client("10.82.17.58",1225);
         //로그인 페이지 버튼
         Label Username = new Label("Username");
         TextField user = new TextField();
@@ -77,14 +82,12 @@ public class Login extends Application  {
         PasswordField password2 = new PasswordField();
         Button register = new Button("등록");
 
-        //login 눌렀을때(Login) -> 메인메뉴로
-        login.setOnAction(e->window.setScene(MainScene));
+
 
         //SignUp 회원가입 -> 회원가입 페이지
         SignUp.setOnAction(e->window.setScene(RegisterScene));
 
-        //start 시작하기 -> ?
-        start.setOnAction(e->window.setScene(GameScene));
+
 
         //rule 게임방법 -> 게임방법 페이지
         rule.setOnAction(e->window.setScene(RuleScene));
@@ -114,8 +117,28 @@ public class Login extends Application  {
         );
         user.setPromptText("Username");
         password.setPromptText("Password");
-        UserId = user2.getText();
-        pw = password2.getText();
+        //login 눌렀을때(Login) -> 메인메뉴로
+  //      if(c.login(user.getText(),password.getText()) == )
+        //login.setOnAction(e->window.setScene(MainScene));
+
+        login.setOnAction((event)->{
+            try {
+                c.login(user.getText(),password.getText());
+
+                ByteBuffer buf = ByteBuffer.allocate(PACKET_SIZE);
+
+                if( c.receive(buf).indexOf("succ_login") != -1) {
+                    window.setScene(MainScene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("로그인 실패");
+                    alert.setHeaderText("아이디나 비번을 다시 확인해 주세요");
+                    alert.showAndWait();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
         LoginScene = new Scene(layout1, 400, 200);
 
         // layout2 = 메인메뉴 페이지
@@ -145,7 +168,7 @@ public class Login extends Application  {
         layout2.setBackground(bg);
 
         //layout3 = 시작 화면
-        Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/slime2.png"));
+        Image image = new Image(new FileInputStream("src/main/resources/projecth/project_h/Slime.png"));
         ImageView imageView = new ImageView(image);
         VBox layout3 = new VBox(imageView);
         layout3.setSpacing(8);
@@ -176,57 +199,82 @@ public class Login extends Application  {
         Background bg2 = new Background(bi2);
         layout3.setBackground(bg2);
 
+        //start 시작하기 -> 게임
+        start.setOnAction((event) ->{
+            window.setScene(GameScene);
+            Receiver r = new Receiver(c,chatting,tf);
+            r.run();
+            Chatting Ch = new Chatting(imageView,tf,chatting,image,layout3,count);
+            
+
+        });
+
         chat.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                if(keyEvent.getCode().equals(KeyCode.ENTER)){
-                    if(count % 18 == 0) {
-                        layout3.getChildren().clear();
-                        layout3.getChildren().addAll(
-                                imageView,
-                                GameReturnButton,
-                                GameExitButton,
-                                chat
-                        );
-                    }
-                    imageView.setImage(image);
-                    Label ch = new Label(chat.getText());
-                    ch.setFont(new Font("Dotum",24));
-                    ch.setTranslateY(-180);
-                    ch.setTranslateX(810);
-                    ch.setStyle("-fx-border-color: Yellow;-fx-background-color: Yellow;");
-                    ch.setTextFill(Color.web("#050505"));
-                    layout3.getChildren().add(ch);
 
-                    chat.setText("");
-                    count++;
-                }
-                switch (keyEvent.getCode()) {
-                    case UP:
-                        imageView.setImage(null);
-                        imageView.setTranslateY(XY2 -= 10);
-                        imageView.setImage(image);
-                        layout3.getChildren().addAll(imageView);
-                        break;
-                    case DOWN:
-                        imageView.setImage(null);
-                        imageView.setTranslateY(XY2 += 10);
-                        imageView.setImage(image);
-                        layout3.getChildren().addAll(imageView);
-                        break;
-                    case RIGHT:
-                        imageView.setImage(null);
-                        imageView.setTranslateX(XY += 10);
-                        imageView.setImage(image);
-                        layout3.getChildren().addAll(imageView);
-                        break;
-                    case LEFT:
-                        imageView.setImage(null);
-                        imageView.setTranslateX(XY -= 10);
-                        imageView.setImage(image);
-                        layout3.getChildren().addAll(imageView);
-                        break;
-                }
+                    if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                        if(!chat.getText().equals("")) {
+                            try {
+                                c.sendMessage(chat.getText());
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                            if (count % 18 == 0) {
+                                layout3.getChildren().clear();
+                                layout3.getChildren().addAll(
+                                        imageView,
+                                        GameReturnButton,
+                                        GameExitButton,
+                                        chat
+                                );
+                            }
+                            imageView.setImage(image);
+                            Label ch = new Label(chat.getText());
+                            ch.setFont(new Font("Dotum", 24));
+                            ch.setTranslateY(-180);
+                            ch.setTranslateX(810);
+                            ch.setStyle("-fx-border-color: Yellow;-fx-background-color: Yellow;");
+                            ch.setTextFill(Color.web("#050505"));
+                            layout3.getChildren().add(ch);
+
+                            chat.setText("");
+                            count++;
+                        }
+                    }
+
+                    try {
+                        switch (keyEvent.getCode()) {
+                            case UP:
+                                imageView.setImage(null);
+                                imageView.setTranslateY(XY2 -= 10);
+                                imageView.setImage(image);
+                                layout3.getChildren().addAll(imageView);
+                                break;
+                            case DOWN:
+                                imageView.setImage(null);
+                                imageView.setTranslateY(XY2 += 10);
+                                imageView.setImage(image);
+                                layout3.getChildren().addAll(imageView);
+                                break;
+                            case RIGHT:
+                                imageView.setImage(null);
+                                imageView.setTranslateX(XY += 10);
+                                imageView.setImage(image);
+                                layout3.getChildren().addAll(imageView);
+                                break;
+                            case LEFT:
+                                imageView.setImage(null);
+                                imageView.setTranslateX(XY -= 10);
+                                imageView.setImage(image);
+                                layout3.getChildren().addAll(imageView);
+                                break;
+                        }
+                    }
+                    catch (Exception e){
+
+                    }
 
             }
         });
@@ -260,12 +308,29 @@ public class Login extends Application  {
                 password2,
                 register
         );
+
         user2.setPromptText("Username");
         password2.setPromptText("Password");
-        UserId2 = user2.getText();
-        pw2 = password2.getText();
-        RegisterScene = new Scene(layout5, 400, 200);
 
+        register.setOnAction((event)->{
+            try {
+                c.register(user2.getText(),password2.getText());
+
+                ByteBuffer buf = ByteBuffer.allocate(PACKET_SIZE);
+
+                if( c.receive(buf).indexOf("succ_reg") != -1) {
+                    window.setScene(LoginScene);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("회원가입 실패");
+                    alert.setHeaderText("같은 이름의 유저가 이미 존재합니다.");
+                    alert.showAndWait();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        RegisterScene = new Scene(layout5, 400, 200);
 
 
         //시작
