@@ -63,8 +63,24 @@ void Server::start()
 			if (command == "exit") {
 				this->~Server();
 			}
+			else if (command == "clear") {
+				system("cls");
+			}
+			else if (command == "list") {
+				if (umap.size() > 0) {
+					for (int i = 0; i < umap.size(); ++i) {
+						ServerLog(Log::Cmd::Log, std::to_string(i+1) + ") " + umap[net::GetPeerAddressString(slt[i+1])]);
+					}
+				}
+				else {
+					ServerLog(Log::Cmd::Log, "(Empty)");
+				}
+			}
+			else if (command == "info") {
+				ServerLog(Log::Cmd::Log, "Server is running on " + ep.ToString());
+			}
 			else {
-				system(command.c_str());
+				ServerLog(Log::Error, "존재하지 않는 명령어입니다.");
 			}
 		}
 	} }.detach();
@@ -111,6 +127,7 @@ void Server::loop()
 			}
 			ServerLog(Log::Info, "Disconnected " + net::GetPeerAddressString(sock));
 			slt.Remove(sock);
+			umap.erase(umap.find(net::GetPeerAddressString(sock)));
 			sock.Close();
 		}
 	}
