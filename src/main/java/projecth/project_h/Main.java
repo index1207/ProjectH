@@ -2,6 +2,7 @@ package projecth.project_h;
 
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,31 +18,26 @@ import javafx.stage.Stage;
 
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 
 
 
-public class Login extends Application  {
+public class Main extends Application  {
 
     private StackPane root = new StackPane();
     private Scene LoginScene, MainScene, RuleScene, RegisterScene,GameScene;
     private Stage window;
-    int count = 0;
-    int XY = 0;
-    int XY2 = 0;
-    String UserId,pw,UserId2,pw2,chatting;
-
-    boolean tf;
+    int count = 0,XY = 0,XY2 = 0;
     final static int PACKET_SIZE = 1024;
-
-
+    String chat1;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         window = primaryStage;
-        Client c = new Client("10.82.17.58",1225);
+        Client c = new Client("10.82.17.58",1207);
         //로그인 페이지 버튼
         Label Username = new Label("Username");
         TextField user = new TextField();
@@ -56,9 +52,10 @@ public class Login extends Application  {
         Button exit = new Button("나가기");
 
         //게임방법 페이지 버튼
-        Label rule2 = new Label("이 게임은 채팅을 칠 수 있는 메타버스 게임입니다.\n" +
-                                    "~이러한 기능 들을 사용할 수 있으며\n" +
-                                    "~게 이용 가능 합니다."
+        Label rule2 = new Label("이 게임은 채팅을 치는 게임입니다.\n" +
+                                   "최대 16명까지 채팅을 할 수 있으며\n"+
+                                   "방향키를 이용해 자신의 화면에 보이는 슬라임을 조종 할 수 있습니다."
+
         );
         Button Return = new Button("돌아가기");
 
@@ -117,16 +114,12 @@ public class Login extends Application  {
         );
         user.setPromptText("Username");
         password.setPromptText("Password");
-        //login 눌렀을때(Login) -> 메인메뉴로
-  //      if(c.login(user.getText(),password.getText()) == )
-        //login.setOnAction(e->window.setScene(MainScene));
 
         login.setOnAction((event)->{
             try {
                 c.login(user.getText(),password.getText());
 
                 ByteBuffer buf = ByteBuffer.allocate(PACKET_SIZE);
-
                 if( c.receive(buf).indexOf("succ_login") != -1) {
                     window.setScene(MainScene);
                 } else {
@@ -202,81 +195,115 @@ public class Login extends Application  {
         //start 시작하기 -> 게임
         start.setOnAction((event) ->{
             window.setScene(GameScene);
-            Receiver r = new Receiver(c,chatting,tf);
-            r.run();
-            Chatting Ch = new Chatting(imageView,tf,chatting,image,layout3,count);
-            
+
+            Thread thread = new Thread(()->{
+                Platform.setImplicitExit(false);
+                while (true){
+                    ByteBuffer buf = ByteBuffer.allocate(PACKET_SIZE);
+                    chat1 = null;
+                    try {
+                        chat1 = Format.JsonParser(c.receive(buf));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Platform.runLater(() -> {
+                        if (count % 18 == 0) {
+                            layout3.getChildren().clear();
+                            layout3.getChildren().addAll(
+                                    imageView,
+                                    GameReturnButton,
+                                    GameExitButton,
+                                    chat
+                            );
+                        }
+                        Label ch = new Label(chat1);
+                        ch.setFont(new Font("Dotum", 24));
+                        ch.setTranslateY(-180);
+                        ch.setTranslateX(810);
+                        ch.setStyle("-fx-border-color: #ffffff;-fx-background-color: #ffffff;");
+                        ch.setTextFill(Color.web("#050505"));
+                        System.out.println(chat1);
+                        layout3.getChildren().add(ch);
+                        count++;
+                    });
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            });
+
+            thread.start();
 
         });
 
-        chat.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
+        chat.setOnKeyPressed(keyEvent -> {
 
-                    if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                        if(!chat.getText().equals("")) {
-                            try {
-                                c.sendMessage(chat.getText());
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+                if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                    if(!chat.getText().equals("")) {
+                        try {
+                            c.sendMessage(chat.getText());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
 
-                            if (count % 18 == 0) {
-                                layout3.getChildren().clear();
-                                layout3.getChildren().addAll(
-                                        imageView,
-                                        GameReturnButton,
-                                        GameExitButton,
-                                        chat
-                                );
-                            }
+                        if (count % 18 == 0) {
+                            layout3.getChildren().clear();
+                            layout3.getChildren().addAll(
+                                    imageView,
+                                    GameReturnButton,
+                                    GameExitButton,
+                                    chat
+                            );
+                        }
+                        imageView.setImage(image);
+                        Label ch = new Label(chat.getText());
+                        ch.setFont(new Font("Dotum", 24));
+                        ch.setTranslateY(-180);
+                        ch.setTranslateX(810);
+                        ch.setStyle("-fx-border-color: Yellow;-fx-background-color: Yellow;");
+                        ch.setTextFill(Color.web("#050505"));
+                        layout3.getChildren().add(ch);
+
+                        chat.setText("");
+                        count++;
+                    }
+                }
+
+                try {
+                    switch (keyEvent.getCode()) {
+                        case UP:
+                            imageView.setImage(null);
+                            imageView.setTranslateY(XY2 -= 10);
                             imageView.setImage(image);
-                            Label ch = new Label(chat.getText());
-                            ch.setFont(new Font("Dotum", 24));
-                            ch.setTranslateY(-180);
-                            ch.setTranslateX(810);
-                            ch.setStyle("-fx-border-color: Yellow;-fx-background-color: Yellow;");
-                            ch.setTextFill(Color.web("#050505"));
-                            layout3.getChildren().add(ch);
-
-                            chat.setText("");
-                            count++;
-                        }
+                            layout3.getChildren().addAll(imageView);
+                            break;
+                        case DOWN:
+                            imageView.setImage(null);
+                            imageView.setTranslateY(XY2 += 10);
+                            imageView.setImage(image);
+                            layout3.getChildren().addAll(imageView);
+                            break;
+                        case RIGHT:
+                            imageView.setImage(null);
+                            imageView.setTranslateX(XY += 10);
+                            imageView.setImage(image);
+                            layout3.getChildren().addAll(imageView);
+                            break;
+                        case LEFT:
+                            imageView.setImage(null);
+                            imageView.setTranslateX(XY -= 10);
+                            imageView.setImage(image);
+                            layout3.getChildren().addAll(imageView);
+                            break;
                     }
+                }
+                catch (Exception e){
 
-                    try {
-                        switch (keyEvent.getCode()) {
-                            case UP:
-                                imageView.setImage(null);
-                                imageView.setTranslateY(XY2 -= 10);
-                                imageView.setImage(image);
-                                layout3.getChildren().addAll(imageView);
-                                break;
-                            case DOWN:
-                                imageView.setImage(null);
-                                imageView.setTranslateY(XY2 += 10);
-                                imageView.setImage(image);
-                                layout3.getChildren().addAll(imageView);
-                                break;
-                            case RIGHT:
-                                imageView.setImage(null);
-                                imageView.setTranslateX(XY += 10);
-                                imageView.setImage(image);
-                                layout3.getChildren().addAll(imageView);
-                                break;
-                            case LEFT:
-                                imageView.setImage(null);
-                                imageView.setTranslateX(XY -= 10);
-                                imageView.setImage(image);
-                                layout3.getChildren().addAll(imageView);
-                                break;
-                        }
-                    }
-                    catch (Exception e){
+                }
 
-                    }
-
-            }
         });
 
         layout3.getChildren().addAll(
