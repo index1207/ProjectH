@@ -19,6 +19,12 @@
     <ClCompile Include="SocketSelector.cpp">
       <Filter>src\source\net</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>src\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>src\source\net</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -62,5 +68,6 @@
     <ClInclude Include="net\ws2.hpp">
       <Filter>src\header\net</Filter>
     </ClInclude>
+    <ClInclude Include="Server.hpp">
+      <Filter>src\header</Filter>
   </ItemGroup>
-</Project>

@@ -52,6 +52,7 @@ namespace net
         copy = master;
 
         int count = select(0, &copy, nullptr, nullptr, time.count() != 0 ? &tv : nullptr);
+        if (count == SOCKET_ERROR) throw network_error();
 
         return count;
     }

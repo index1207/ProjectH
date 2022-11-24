@@ -48,6 +48,8 @@ namespace net {
 		Socket(Socket&& sock) noexcept;
 
 		void operator=(const Socket& sock);
+
+		bool operator==(const Socket& sock) const;
 	public:
 		void SetBlocking(bool blocking);
 		
