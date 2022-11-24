@@ -70,6 +70,4 @@
     </ClInclude>
     <ClInclude Include="Server.hpp">
       <Filter>src\header</Filter>
-    </ClInclude>
   </ItemGroup>
-</Project>
