@@ -95,28 +95,32 @@ void Server::loop()
 
 		Json::Reader reader;
 		Json::Value root;
-		char buf[1024] = "";
+		char buf[1024] = ""; // 패킷 버퍼
 		try {
-			if (sock == listenSock) {
+			if (sock == listenSock) { // 소켓이 서버 소켓일 경우
+				// 클라이언트와 연결 후 소켓 집합에 추가
 				auto client = listenSock.Accept();
 				slt.Add(client);
 
 				ServerLog(Log::Info, "Connected " + net::GetPeerAddressString(client));
 			}
 			else {
-				sock.Receive(buf, 1024);
+				sock.Receive(buf, 1024); // 패킷 받기
 
+				// json문자열 파싱
 				reader.parse(buf, root);
-				if (root["type"].asString() == "login") {
+
+				auto type = root["type"].asString();
+				if (type == "login") /* login일 경우 로그인 */ {
 					loginUser(root, sock);
 				}
-				else if (root["type"].asString() == "register") {
+				else if (type == "register") /* register일 경우 회원가입 */ {
 					registerUser(root, sock);
 				}
-				else if (root["type"].asString() == "message") {
+				else if (type == "message") /* message일 경우 메세지 전송 */ {
 					Message(root, sock);
 				}
-				else if (root["type"].asString() == "move") {
+				else if (type == "move") /* 미구현 */ {
 					//Move(root, listenSock, slt, sock);
 				}
 			}
@@ -126,9 +130,9 @@ void Server::loop()
 				exit(true);
 			}
 			ServerLog(Log::Info, "Disconnected " + net::GetPeerAddressString(sock));
-			slt.Remove(sock);
-			umap.erase(umap.find(net::GetPeerAddressString(sock)));
-			sock.Close();
+			slt.Remove(sock); // 집합에서 소켓 삭제
+			umap.erase(umap.find(net::GetPeerAddressString(sock))); // 유저리스트에서 삭제
+			sock.Close(); // 소켓 종료
 		}
 	}
 }
@@ -151,7 +155,7 @@ void Server::ServerLog(int flag, std::string msg)
 		t_sec = "0" + t_sec;
 	}
 
-	auto timestr = std::format("[{}:{}:{}]", t_hour, t_min, t_sec);
+	auto timestr = std::format("[{}:{}:{}] ", t_hour, t_min, t_sec);
 
 	if (flag != Log::Cmd::Command && !isEnter.load()) {
 		std::cout << '\n';
@@ -161,22 +165,22 @@ void Server::ServerLog(int flag, std::string msg)
 	switch (flag)
 	{
 	case Server::Log::Warning:
-		std::cout << dye::yellow(" [WARNINGS] " + msg) << '\n';
+		std::cout << dye::yellow("[WARNINGS] " + msg) << '\n';
 		break;
 	case Server::Log::Info:
-		std::cout << dye::white(" [INFO|Server] " + msg) << '\n';
+		std::cout << dye::white("[INFO|Server] " + msg) << '\n';
 		break;
 	case Server::Log::Error:
-		std::cout << dye::red(" [ERROR] " + msg) << '\n';
+		std::cout << dye::red("[ERROR] " + msg) << '\n';
 		break;
 	case Server::Log::Chat:
-		std::cout << dye::white((" [INFO|Chat] ") + msg) << '\n';
+		std::cout << dye::white(("[INFO|Chat] ") + msg) << '\n';
 		break;
 	case Server::Log::Cmd::Log:
-		std::cout << dye::light_blue(" [CMD|Log] ") << dye::white(msg) << '\n';
+		std::cout << dye::light_blue("[CMD|Log] ") << dye::white(msg) << '\n';
 		break;
 	case Server::Log::Cmd::Command:
-		std::cout << dye::light_blue(" [CMD|Command] ");
+		std::cout << dye::light_blue("[CMD|Command] ");
 		break;
 	}
 }
